@@ -9,8 +9,8 @@ from schemas.Numero_schemna import Numero_especial
 app = FastAPI()
 
 # app.include_router(numero_router.numero_router, prefix="/api")
-app.include_router(admin_router.rifa_router, prefix="/api/admin")
-app.include_router(main_router.user_router, prefix="/api")
+app.include_router(admin_router.admin_router, prefix="/api/admin")
+app.include_router(main_router.main_router, prefix="/api")
 
 
 @app.on_event("startup")
