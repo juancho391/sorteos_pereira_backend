@@ -12,7 +12,7 @@ class Users(SQLModel, table=True):
     celular: str
 
 
-class UserResponse(SQLModel):
-    id: int | None = Field(default=None, primary_key=True)
-    cedula: str
-    email: EmailStr
+# class UserResponse(SQLModel):
+#     id: int | None = Field(default=None, primary_key=True)
+#     cedula: str
+#     email: EmailStr
