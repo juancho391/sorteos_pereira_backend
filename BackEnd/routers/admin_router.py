@@ -31,7 +31,7 @@ def crear_rifa(rifa: Rifa, session: session_dependency):
 
 
 # Endpoint para finalizar rifa
-@admin_router.put("rifa/{id}")
+@admin_router.put("desactivar/rifa/{id}")
 def finalizar_rifa(id: int, session: session_dependency):
     try:
         rifa_finalazada = RifaService(session=session).finalizar_rifa(id=id)
