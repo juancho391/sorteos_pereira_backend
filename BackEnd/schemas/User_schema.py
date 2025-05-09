@@ -10,9 +10,4 @@ class Users(SQLModel, table=True):
     nombre: str
     direccion: str
     celular: str
-
-
-# class UserResponse(SQLModel):
-#     id: int | None = Field(default=None, primary_key=True)
-#     cedula: str
-#     email: EmailStr
+    is_admin: bool | None = Field(default=False)
