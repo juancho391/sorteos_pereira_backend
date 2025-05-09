@@ -14,11 +14,3 @@ class User_Services:
         self.session.commit()
         self.session.refresh(user)
         return user
-
-
-# class User_Services:
-#     def __init__(self, engine):
-#         self.engine = engine
-
-#     def obtener_usuarios(self):
-#         return user_model.UserModel().consultar_Usuarios()
