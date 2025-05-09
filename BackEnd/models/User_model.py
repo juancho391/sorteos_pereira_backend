@@ -2,7 +2,7 @@ from schemas.User_schema import Users
 from sqlmodel import select
 
 
-class User_Services:
+class UserModel:
     def __init__(self, session):
         self.session = session
 

@@ -2,7 +2,7 @@ from schemas.Rifa_schema import Rifa
 from sqlmodel import select
 
 
-class RifaService:
+class RifaModel:
     def __init__(self, session):
         self.session = session
 
@@ -13,7 +13,7 @@ class RifaService:
         rifa = self.session.get(Rifa, id)
         if rifa:
             return rifa
-        return False
+        return None
 
     def crear_rifa(self, rifa: Rifa):
         self.session.add(rifa)
@@ -29,4 +29,4 @@ class RifaService:
             self.session.commit()
             self.session.refresh(rifa)
             return rifa
-        return False
+        return None
