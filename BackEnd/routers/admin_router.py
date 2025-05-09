@@ -1,5 +1,6 @@
 from fastapi import APIRouter
 from schemas.Rifa_schema import Rifa
+from schemas.Numero_schemna import Numero_especial
 from services.Rifa_service import RifaService
 from db.conexion import session_dependency
 from fastapi.responses import JSONResponse
@@ -31,7 +32,7 @@ def crear_rifa(rifa: Rifa, session: session_dependency):
 
 
 # Endpoint para finalizar rifa
-@admin_router.put("desactivar/rifa/{id}")
+@admin_router.put("/rifa/{id}/desactivar")
 def finalizar_rifa(id: int, session: session_dependency):
     try:
         rifa_finalazada = RifaService(session=session).finalizar_rifa(id=id)
@@ -55,6 +56,25 @@ def obtener_rifas(session: session_dependency):
             content={
                 "message": "Rifas obtenidas con exito",
                 "rifas": jsonable_encoder(rifas),
+            },
+        )
+    except ValueError as e:
+        return JSONResponse(status_code=400, content={"message": str(e)})
+
+
+@admin_router.post("/rifa/numero_especial")
+def crear_numero_especial(
+    numero_especial: Numero_especial, session: session_dependency
+):
+    try:
+        numero_creado = RifaService(session=session).agregar_numero_especial(
+            numero_especial=numero_especial
+        )
+        return JSONResponse(
+            status_code=201,
+            content={
+                "message": "Numero especial creado con exito",
+                "numero": jsonable_encoder(numero_creado),
             },
         )
     except ValueError as e:
