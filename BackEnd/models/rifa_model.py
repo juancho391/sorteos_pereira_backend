@@ -7,7 +7,8 @@ class RifaModel:
         self.session = session
 
     def obtener_rifas(self):
-        return self.session.excec(select()).all
+        rifas = self.session.exec(select(Rifa)).all()
+        return rifas
 
     def obtener_rifa(self, id: int):
         rifa = self.session.get(Rifa, id)
@@ -23,7 +24,7 @@ class RifaModel:
 
     def finalizar_rifa(self, id: int):
         rifa = self.session.get(Rifa, id)
-        if rifa:
+        if rifa and rifa.is_active == True:
             rifa.is_active = False
             self.session.add(rifa)
             self.session.commit()
