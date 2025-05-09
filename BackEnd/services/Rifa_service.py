@@ -50,5 +50,5 @@ class RifaService:
                 raise ValueError(
                     f"Ya existe un numero especial con el numero {numero_especial.numero}"
                 )
-        numero_creado = NumeroModel().crear_numero(numero_especial)
+        numero_creado = NumeroModel(session=self.session).crear_numero(numero_especial)
         return numero_creado
