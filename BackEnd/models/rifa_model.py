@@ -1,4 +1,5 @@
 from schemas.Rifa_schema import Rifa
+from schemas.Numero_schemna import Numero_especial
 from sqlmodel import select
 
 
@@ -29,5 +30,13 @@ class RifaModel:
             self.session.add(rifa)
             self.session.commit()
             self.session.refresh(rifa)
+            return rifa
+        return None
+
+    def obtener_rifa_activa(self):
+        consulta = select(Rifa).where(Rifa.is_active == True)
+        resultado = self.session.exec(consulta)
+        rifa = resultado.one_or_none()
+        if rifa:
             return rifa
         return None

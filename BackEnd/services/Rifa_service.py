@@ -1,5 +1,5 @@
 from models.rifa_model import RifaModel
-from schemas.Rifa_schema import Rifa
+from schemas.Rifa_schema import Rifa, RifaResponse
 from schemas.Numero_schemna import Numero_especial
 from models.numero_model import NumeroModel
 from models.Boleta_model import BoletaModel
@@ -12,6 +12,7 @@ class RifaService:
         self.session = session
         self.boleta_model = BoletaModel(session=self.session)
         self.user_model = UserModel(session=self.session)
+        self.numer_model = NumeroModel(session=self.session)
 
     def obtener_rifas(self):
         rifas = RifaModel(session=self.session).obtener_rifas()
@@ -73,3 +74,25 @@ class RifaService:
         raise ValueError(
             f"No se encontro el usuario con el id {boleta_obtenida.id_usuario}"
         )
+
+    def obtener_rifa_activa_con_numeros_especiales(self):
+        rifa = RifaModel(session=self.session).obtener_rifa_activa()
+        if not rifa:
+            raise ValueError("No se encontro una rifa activa")
+
+        numeros_especiales = self.numer_model.obtener_numeros_especiales(
+            id_rifa=rifa.id
+        )
+        if numeros_especiales:
+            rifa_numeros = RifaResponse(
+                id=rifa.id,
+                premio=rifa.premio,
+                tipo=rifa.tipo,
+                is_active=rifa.is_active,
+                fecha_inicio=rifa.fecha_inicio,
+                fecha_fin=rifa.fecha_fin,
+                image_premio=rifa.image_premio,
+                numeros_especiales=numeros_especiales,
+            )
+            return rifa_numeros
+        return rifa
