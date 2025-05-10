@@ -10,3 +10,8 @@ class Boleta(SQLModel, table=True):
     id_rifa: int | None = Field(default=None, foreign_key="Rifa.id")
     numero: int
     disponible: bool | None = True
+
+
+class BoletaConsulta(SQLModel):
+    numero: int
+    id_rifa: int

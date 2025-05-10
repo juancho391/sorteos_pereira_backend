@@ -14,3 +14,9 @@ class UserModel:
         self.session.commit()
         self.session.refresh(user)
         return user
+
+    def obtener_usuario(self, id: int):
+        user = self.session.get(Users, id)
+        if user:
+            return user
+        return None

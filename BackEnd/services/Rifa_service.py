@@ -2,11 +2,16 @@ from models.rifa_model import RifaModel
 from schemas.Rifa_schema import Rifa
 from schemas.Numero_schemna import Numero_especial
 from models.numero_model import NumeroModel
+from models.Boleta_model import BoletaModel
+from models.User_model import UserModel
+from schemas.Boleta_schema import BoletaConsulta
 
 
 class RifaService:
     def __init__(self, session):
         self.session = session
+        self.boleta_model = BoletaModel(session=self.session)
+        self.user_model = UserModel(session=self.session)
 
     def obtener_rifas(self):
         rifas = RifaModel(session=self.session).obtener_rifas()
@@ -52,3 +57,19 @@ class RifaService:
                 )
         numero_creado = NumeroModel(session=self.session).crear_numero(numero_especial)
         return numero_creado
+
+    def obtener_ganador(self, boleta: BoletaConsulta):
+        # primero verifico que la boleta exista
+        boleta_obtenida = self.boleta_model.obtener_boleta(boleta=boleta)
+        if not boleta_obtenida:
+            raise ValueError(
+                f"No se encontro la boleta con el numero {boleta.numero} y rifa {boleta.id_rifa}"
+            )
+        # busco el usuario al que pertenece la boleta
+        usuario = self.user_model.obtener_usuario(id=boleta_obtenida.id_usuario)
+        if usuario:
+            return usuario
+
+        raise ValueError(
+            f"No se encontro el usuario con el id {boleta_obtenida.id_usuario}"
+        )

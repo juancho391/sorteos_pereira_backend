@@ -5,6 +5,8 @@ from services.Rifa_service import RifaService
 from db.conexion import session_dependency
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
+from schemas.Boleta_schema import BoletaConsulta
+from schemas.User_schema import UserResponse
 
 admin_router = APIRouter()
 
@@ -77,5 +79,17 @@ def crear_numero_especial(
                 "numero": jsonable_encoder(numero_creado),
             },
         )
+    except ValueError as e:
+        return JSONResponse(status_code=400, content={"message": str(e)})
+
+
+@admin_router.post("/rifa/ganador", response_model=UserResponse)
+def obtener_ganador(
+    boleta: BoletaConsulta,
+    session: session_dependency,
+):
+    try:
+        ganador = RifaService(session=session).obtener_ganador(boleta=boleta)
+        return ganador
     except ValueError as e:
         return JSONResponse(status_code=400, content={"message": str(e)})
