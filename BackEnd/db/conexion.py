@@ -27,16 +27,3 @@ def get_session():
 
 
 session_dependency = Annotated[Session, Depends(get_session)]
-
-
-class Conexion:
-
-    def __init__(self):
-        self.engine = create_engine(db_url)
-
-    def create_tables(self):
-        SQLModel.metadata.create_all(self.engine)
-
-    def get_session(self):
-        with Session(self.engine) as session:
-            yield session
