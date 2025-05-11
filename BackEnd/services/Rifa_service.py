@@ -3,7 +3,7 @@ from schemas.Rifa_schema import Rifa, RifaResponse
 from schemas.Numero_schemna import Numero_especial
 from models.numero_model import NumeroModel
 from models.Boleta_model import BoletaModel
-from models.User_model import UserModel
+from models.User_model import User_model
 from schemas.Boleta_schema import BoletaConsulta
 
 
@@ -11,7 +11,7 @@ class RifaService:
     def __init__(self, session):
         self.session = session
         self.boleta_model = BoletaModel(session=self.session)
-        self.user_model = UserModel(session=self.session)
+        self.user_model = User_model(session=self.session)
         self.numer_model = NumeroModel(session=self.session)
 
     def obtener_rifas(self):

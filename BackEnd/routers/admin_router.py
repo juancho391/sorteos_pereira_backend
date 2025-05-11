@@ -6,16 +6,21 @@ from db.conexion import session_dependency
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 from schemas.Boleta_schema import BoletaConsulta
-from schemas.User_schema import UserResponse
+from schemas.User_schema import UserResponse ,UserAdminLogin
+from services import user_services
 
 admin_router = APIRouter()
 
 
 # Endpoint para iniciar sesion como admin
 @admin_router.post("/login")
-def loginAdmin():
-    pass
-
+def loginAdmin(user: UserAdminLogin, session: session_dependency):
+    servicio_user = user_services.User_services(session=session)
+    try:
+        user_admin = servicio_user.login_user(user)
+        return JSONResponse(status_code=200, content={'succes': True, 'data':jsonable_encoder(user_admin), "message": "user logeado con exito"})
+    except ValueError as e:
+        return JSONResponse(status_code=400, content={"succes": False, "data": None, "message": str(e)})
 
 # Endpoint para crear rifa
 @admin_router.post("/rifa")
