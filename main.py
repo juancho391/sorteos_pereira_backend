@@ -21,5 +21,9 @@ registrar_routers(app=app)
 
 # @app.on_event("startup")
 # def on_startup():
+<<<<<<< HEAD
 #     # create_tables_and_db()
 #     pass
+=======
+#     create_tables_and_db()
+>>>>>>> a7283cb1e9b654b83d8400f62715692a43c676ad

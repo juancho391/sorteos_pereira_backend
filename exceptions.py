@@ -33,3 +33,22 @@ class RifaNotFoundError(HTTPException):
         super().__init__(status_code=404, detail=f"No se encontro la rifa con id {id}")
 
 
+class NumeroEspecialCreationError(HTTPException):
+    def __init__(self, error: str):
+        super().__init__(
+            status_code=500, detail=f"Fallo al crear el numero especial: {error}"
+        )
+
+
+class NumeroEspecialNotFoundError(HTTPException):
+    def __init__(self, id: int):
+        super().__init__(
+            status_code=404, detail=f"No se encontro el numero especial con id:  {id}"
+        )
+
+
+class NumeroEspecialDeleteError(HTTPException):
+    def __init__(self, error: str):
+        super().__init__(
+            status_code=500, detail=f"Fallo al eliminar el numero especial: {error}"
+        )

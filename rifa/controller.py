@@ -16,7 +16,11 @@ def obtener_rifas(session: session_dependency, usuario_actual: service.Usuario_a
 
 # Ednpoint para crear una rifa
 @router_rifa.post("/")
-def crear_rifa(rifa: models.RifaCreate, session: session_dependency, usuario_actual: service.Usuario_actual):
+def crear_rifa(
+    rifa: models.RifaCreate,
+    session: session_dependency,
+    usuario_actual: service.Usuario_actual,
+):
     return services.crear_rifa(session=session, rifa=rifa)
 
 @router_rifa.get("/activa")
@@ -24,9 +28,11 @@ def obtener_rifa(session: session_dependency, response_model=models.RifaResponse
     return services.obtener_rifa_activa_numeros_espciales(session=session)
 
 
-@router_rifa.put("rifa/{id}/desactivar")
-def finalizar_rifa(id: int, session: session_dependency, usuario_actual: service.Usuario_actual, response_model=models.RifaResponse):
+@router_rifa.put("/{id}/desactivar")
+def finalizar_rifa(id: int, session: session_dependency, response_model=models.RifaResponse):
     return services.finalizar_rifa(session=session, id=id)
+
+
 
 # @router_rifa.put("/rifa/{id}/desactivar")
 # def finalizar_rifa(

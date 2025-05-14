@@ -80,3 +80,14 @@ def login_usuario(usuario: models.USerLogin, session: session_dependency):
         expires_delta=timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES),
     )
     return models.Token(access_token=token, token_type="bearer")
+
+
+# def registrar_usuario(usuario: User.Users, session: session_dependency):
+#     try:
+#         usuario.password = obtener_contrasena_hash(contrasena=usuario.password)
+#         session.add(usuario)
+#         session.commit()
+#         session.refresh(usuario)
+#     except Exception as e:
+#         raise UserNotFoundError(error=str(e))
+#     return usuario

@@ -3,7 +3,6 @@ from typing import Optional
 from datetime import time, date
 
 
-
 # Clase para crear la tabla
 class Rifa(SQLModel, table=True):
     __tablename__ = "Rifa"
@@ -15,7 +14,4 @@ class Rifa(SQLModel, table=True):
     fecha_fin: Optional[date] = Field(default=None)
     image_premio: str
     precio: int
-
-
-
 
