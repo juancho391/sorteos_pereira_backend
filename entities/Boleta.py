@@ -4,7 +4,7 @@ from .User import Users
 
 
 class Boleta(SQLModel, table=True):
-    __tablename__ = "boleta"
+    __tablename__ = "Boleta"
     id: int | None = Field(default=None, primary_key=True)
     id_usuario: int | None = Field(default=None, foreign_key="Users.id")
     id_rifa: int | None = Field(default=None, foreign_key="Rifa.id")
