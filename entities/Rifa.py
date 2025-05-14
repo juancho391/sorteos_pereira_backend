@@ -13,8 +13,9 @@ class Rifa(SQLModel, table=True):
     fecha_inicio: Optional[date] = Field(default=date.today())
     fecha_fin: Optional[date] = Field(default=None)
     image_premio: str
+    precio : int
 
-
+# Class for response de request of the fronted
 class RifaResponse(SQLModel):
     id: int | None = Field(default=None, primary_key=True)
     premio: str
