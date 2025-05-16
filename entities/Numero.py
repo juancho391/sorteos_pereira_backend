@@ -1,5 +1,6 @@
-from sqlmodel import SQLModel, Field
+from sqlmodel import SQLModel, Field, Relationship
 from .Rifa import Rifa
+
 
 class Numero_especial(SQLModel, table=True):
     __tablename__ = "Numero_especial"
@@ -8,4 +9,4 @@ class Numero_especial(SQLModel, table=True):
     id_rifa: int = Field(foreign_key="Rifa.id")
     disponible: bool | None = Field(default=True)
 
-
+    rifa: Rifa | None = Relationship(back_populates="numeros_especiales")

@@ -27,7 +27,7 @@ def crear_numero_especial(
                 raise NumeroEspecialCreationError(
                     error=f"Ya existe un numero especial {numero_especial.numero} en la rifa con id {numero_especial.id_rifa}"
                 )
-        nuevo_numero_especial = Numero_especial(**numero_especial.model_dump())
+        nuevo_numero_especial = Numero_especial.model_validate(numero_especial)
         session.add(nuevo_numero_especial)
         session.commit()
         session.refresh(nuevo_numero_especial)

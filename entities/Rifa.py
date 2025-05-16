@@ -1,4 +1,4 @@
-from sqlmodel import SQLModel, Field
+from sqlmodel import SQLModel, Field, Relationship
 from typing import Optional
 from datetime import time, date
 
@@ -15,3 +15,4 @@ class Rifa(SQLModel, table=True):
     image_premio: str
     precio: int
 
+    numeros_especiales: list["Numero_especial"] = Relationship(back_populates="rifa")

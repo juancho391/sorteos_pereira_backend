@@ -4,34 +4,31 @@ from . import models
 from ..db.conexion import session_dependency
 from fastapi.encoders import jsonable_encoder
 from ..auth import service
+from ..entities.Rifa import Rifa
 
 router_rifa = APIRouter(tags=["Rifa"])
 
 
 # Ednpoint para obtener todas las rifas
-@router_rifa.get("/")
-def obtener_rifas(session: session_dependency, usuario_actual: service.Usuario_actual):
+@router_rifa.get("/", response_model=list[models.RifaResponse])
+def obtener_rifas(session: session_dependency):
     return services.obtener_rifas(session=session)
 
 
 # Ednpoint para crear una rifa
 @router_rifa.post("/")
-def crear_rifa(
-    rifa: models.RifaCreate,
-    session: session_dependency,
-    usuario_actual: service.Usuario_actual,
-):
+def crear_rifa(rifa: models.RifaCreate, session: session_dependency):
     return services.crear_rifa(session=session, rifa=rifa)
 
-@router_rifa.get("/activa")
-def obtener_rifa(session: session_dependency, response_model=models.RifaResponse):
+
+@router_rifa.get("/activa", response_model=models.RifaResponse)
+def obtener_rifa(session: session_dependency):
     return services.obtener_rifa_activa_numeros_espciales(session=session)
 
 
 @router_rifa.put("/{id}/desactivar")
-def finalizar_rifa(id: int, session: session_dependency, response_model=models.RifaResponse):
+def finalizar_rifa(id: int, session: session_dependency):
     return services.finalizar_rifa(session=session, id=id)
-
 
 
 # @router_rifa.put("/rifa/{id}/desactivar")

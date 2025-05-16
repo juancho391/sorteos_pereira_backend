@@ -3,7 +3,7 @@ from ..exceptions import RifaCreationError
 from sqlmodel import select
 from . import models
 from ..entities.Rifa import Rifa
-from .. entities.Numero import Numero_especial
+from ..entities.Numero import Numero_especial
 
 
 def obtener_rifas(session: session_dependency):
@@ -13,15 +13,17 @@ def obtener_rifas(session: session_dependency):
         raise ValueError("No se encontraron rifas")
     return rifas
 
+
 def crear_rifa(session: session_dependency, rifa: models.RifaCreate):
     try:
-        nueva_rifa = Rifa(**rifa.model_dump())
+        nueva_rifa = Rifa.model_validate(rifa)
         session.add(nueva_rifa)
         session.commit()
         session.refresh(nueva_rifa)
         return nueva_rifa
     except Exception as e:
         raise RifaCreationError(error=str(e))
+
 
 def finalizar_rifa(session: session_dependency, id: int):
     rifa = session.get(Rifa.Rifa, id)
@@ -55,25 +57,4 @@ def obtener_rifa_activa_numeros_espciales(session: session_dependency):
     rifa = session.exec(select(Rifa).where(Rifa.is_active == True)).first()
     if not rifa:
         raise ValueError("No se encontro una rifa activa")
-
-    numeros_especiales = session.exec(select(Numero_especial).where(Numero_especial.id_rifa == rifa.id)).all()
-    numeros = [
-        models.Numero_especial(**n.model_dump())
-        for n in numeros_especiales
-    ]
-
-    print(numeros_especiales)
-    print(rifa)
-    rifa = models.RifaResponse(
-        id=rifa.id,
-        premio=rifa.premio,
-        tipo=rifa.tipo,
-        precio=rifa.precio,
-        is_active=rifa.is_active,
-        fecha_inicio=rifa.fecha_inicio,
-        fecha_fin=rifa.fecha_fin,
-        image_premio=rifa.image_premio,
-        numeros_especiales=numeros,
-    )
-
     return rifa
