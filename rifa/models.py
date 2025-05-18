@@ -17,7 +17,7 @@ class RifaCreate(SQLModel):
     is_active: Optional[bool] = True
     fecha_inicio: Optional[str] = None
     fecha_fin: Optional[str] = None
-    image_premio: str
+    image_premio: Optional[str] = None
     precio: int
 
 
