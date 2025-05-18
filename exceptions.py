@@ -52,3 +52,13 @@ class NumeroEspecialDeleteError(HTTPException):
         super().__init__(
             status_code=500, detail=f"Fallo al eliminar el numero especial: {error}"
         )
+
+
+class BoletaNotFoundError(HTTPException):
+    def __init__(self, numero: int):
+        super().__init__(status_code=404, detail=f"No se encontro la boleta: {numero}")
+
+
+class RifaNotFoundError(HTTPException):
+    def __init__(self):
+        super().__init__(status_code=404, detail=f"No se encontro la rifa")

@@ -14,13 +14,8 @@ class Users(SQLModel, table=True):
     password: str | None = Field(default=None)
 
 
-class UserAdminLogin(SQLModel):
-    email: EmailStr
-    password: str
-
-
 class UserResponse(SQLModel):
-    id: int | None = Field(default=None, primary_key=True)
+    id: int
     cedula: str
     email: EmailStr
     nombre: str

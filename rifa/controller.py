@@ -2,7 +2,6 @@ from fastapi import APIRouter, UploadFile, File, Form
 from . import services
 from . import models
 from ..db.conexion import session_dependency
-from fastapi.encoders import jsonable_encoder
 from ..s3.service import upload_image
 from ..auth import service
 from ..entities.Rifa import Rifa
@@ -53,49 +52,6 @@ def finalizar_rifa(id: int, session: session_dependency):
     return services.finalizar_rifa(session=session, id=id)
 
 
-# @router_rifa.put("/rifa/{id}/desactivar")
-# def finalizar_rifa(
-#     id: int, session: session_dependency, usuario_actual: service.Usuario_actual
-# ):
-#     try:
-#         rifa_finalazada = services.RifaService(session=session).finalizar_rifa(id=id)
-#         return JSONResponse(
-#             status_code=200,
-#             content={
-#                 "message": "Rifa finalizada con exito",
-#                 "rifa": jsonable_encoder(rifa_finalazada),
-#             },
-#         )
-#     except ValueError as e:
-#         return JSONResponse(status_code=400, content={"message": str(e)})
-
-
-# @router_rifa.post("/rifa/numero_especial")
-# def crear_numero_especial(
-#     numero_especial: Numero_especial, session: session_dependency
-# ):
-#     try:
-#         numero_creado = services.RifaService(session=session).agregar_numero_especial(
-#             numero_especial=numero_especial
-#         )
-#         return JSONResponse(
-#             status_code=201,
-#             content={
-#                 "message": "Numero especial creado con exito",
-#                 "numero": jsonable_encoder(numero_creado),
-#             },
-#         )
-#     except ValueError as e:
-#         return JSONResponse(status_code=400, content={"message": str(e)})
-
-
-# @router_rifa.post("/rifa/ganador", response_model=UserResponse)
-# def obtener_ganador(
-#     boleta: BoletaConsulta,
-#     session: session_dependency,
-# ):
-#     try:
-#         ganador = services.RifaService(session=session).obtener_ganador(boleta=boleta)
-#         return ganador
-#     except ValueError as e:
-#         return JSONResponse(status_code=400, content={"message": str(e)})
+@router_rifa.get("/ganador")
+def obtener_ganador(session: session_dependency, boleta: models.BoletaConsulta):
+    return services.obtener_ganador(session=session, boleta=boleta)

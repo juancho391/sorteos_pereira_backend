@@ -29,5 +29,11 @@ class RifaResponse(SQLModel):
     fecha_inicio: date
     fecha_fin: Optional[date] = None
     image_premio: str
-    numeros_especiales: list[Numero_especial] = []
     precio: int
+    numeros_especiales: list[Numero_especial] = []
+    boletas_vendidas: Optional[int] = 0
+
+
+class BoletaConsulta(SQLModel):
+    numero: int
+    id_rifa: int
