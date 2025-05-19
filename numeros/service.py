@@ -84,6 +84,7 @@ def eliminar_numero_especial(numero: int, id_rifa: int, session: session_depende
         raise NumeroEspecialDeleteError(error=str(e))
 
 
+# Funcion para generar los numeros
 def generarNumero(
     lista_numeros: list[int],
     cantidad_numeros: int,
@@ -91,14 +92,14 @@ def generarNumero(
     session: session_dependency,
     cantidad_comprada: int = 3,
 ) -> int:
-    numeros_disponibles = len(lista_numeros) - cantidad_numeros
+    numeros_disponibles = cantidad_numeros - len(lista_numeros)
     if numeros_disponibles < cantidad_comprada:
         raise ValueError("No hay suficientes numeros disponibles para la compra")
     lista_numeros_generados = []
     contador = 0
     contador_premiados = 0
     verificar = services.verificar_rifas_activas(session=session)
-    if verificar == False:
+    if verificar == True:
         raise ValueError("No se pueden generar numeros, hay mas de una rifa activa")
     while contador < cantidad_comprada:
         numero = random.randint(1, cantidad_numeros)
@@ -113,25 +114,34 @@ def generarNumero(
     return lista_numeros_generados
 
 
-def obtener_lista_numeros(
-    session: session_dependency, rifa_activa: Rifa.Rifa
-) -> list[int]:
-    numeros = session.exec(
-        select(Boleta.numero).where(Boleta.id_rifa == rifa_activa.id)
-    ).all()
-    print(numeros)
-    return numeros
+# obtener lista de numeros
+# def obtener_lista_numeros(
+#     session: session_dependency, rifa_activa: Rifa.Rifa
+# ) -> list[int]:
+#     numeros = session.exec(
+#         select(Boleta.numero).where(Boleta.id_rifa == rifa_activa.id)
+#     ).all()
+#     print(numeros)
+#     return numeros
 
 
+def obtener_lista_numeros():
+    return [1, 2, 3, 4]
+
+
+# Obtener lista de numeros especiales
 def obtener_lista_numeros_especiales(
     session: session_dependency, rifa_activa: Rifa.Rifa
 ) -> list[int]:
     numeros = session.exec(
         select(Numero_especial.numero).where(Numero_especial.id_rifa == rifa_activa.id)
     )
+    if not numeros:
+        return []
     return numeros
 
 
+# Crear numero en la base de datos
 def crear_numero(
     session: session_dependency, usuario: int, rifa: int, lista_numeros: list[int]
 ) -> list[Boleta]:
@@ -145,3 +155,17 @@ def crear_numero(
 
 
 # def comprar_boletas()
+def generar_compra_boletas(session: session_dependency, cantidad_comprada: int):
+    rifa_activa = services.obtener_rifa_activa_numeros_espciales(session=session)
+    lista_numeros = obtener_lista_numeros()
+    lita_numeros_especiales = obtener_lista_numeros_especiales(
+        session=session, rifa_activa=rifa_activa
+    )
+    numeros_generados = generarNumero(
+        lista_numeros=lista_numeros,
+        cantidad_numeros=9999,
+        lista_numeros_especiales=lita_numeros_especiales,
+        session=session,
+        cantidad_comprada=cantidad_comprada,
+    )
+    return numeros_generados

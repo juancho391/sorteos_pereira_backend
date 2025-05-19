@@ -1,8 +1,9 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Request
 from . import service
 from . import models
 from ..db.conexion import session_dependency
 from ..auth.service import Usuario_actual
+import json
 
 
 router_numeros = APIRouter(tags=["Numeros"])
@@ -26,5 +27,9 @@ def eliminar_numero_especial(numero: int, id_rifa: int, sesesion: session_depend
     )
 
 
-# @router_numeros.post("/compra")
-# def comprar_boletas(compra: models.Compra, sesesion: session_dependency):
+@router_numeros.post("/webhook/mercadopago", status_code=200)
+async def mercadopago_webhook(request: Request):
+    data = await request.json()
+    print("Webhook data:", json.dumps(data, indent=2))
+    # Ejemplo: data['type'] == 'payment'
+    return {"status": "received"}
