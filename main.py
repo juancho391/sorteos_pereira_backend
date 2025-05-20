@@ -1,6 +1,6 @@
 from .db.conexion import create_tables_and_db
 from fastapi import FastAPI, Depends
-from .entities import *
+from .entities.Boleta import Boleta
 from fastapi.middleware.cors import CORSMiddleware
 from .api import registrar_routers
 
@@ -21,5 +21,4 @@ registrar_routers(app=app)
 
 # @app.on_event("startup")
 # def on_startup():
-#     # create_tables_and_db()
-#     pass
+#     create_tables_and_db()

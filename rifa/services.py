@@ -10,10 +10,10 @@ from . import models
 from ..entities.Rifa import Rifa
 from ..entities.Boleta import Boleta
 from ..entities.User import Users
+from ..numeros.service import obtener_numero_boletas_vendidas
 
 
 def obtener_rifas(session: session_dependency):
-
     rifas = session.exec(select(Rifa)).all()
     if not rifas:
         raise ValueError("No se encontraron rifas")
@@ -62,7 +62,21 @@ def obtener_rifa_activa_numeros_espciales(session: session_dependency):
     rifa = session.exec(select(Rifa).where(Rifa.is_active == True)).first()
     if not rifa:
         raise RifaNotFoundError()
-    return rifa
+    boletas_vendidas = obtener_numero_boletas_vendidas(session=session, id_rifa=rifa.id)
+    rifa_response = models.RifaResponse(
+        id=rifa.id,
+        premio=rifa.premio,
+        tipo=rifa.tipo,
+        is_active=rifa.is_active,
+        fecha_inicio=rifa.fecha_inicio,
+        fecha_fin=rifa.fecha_fin,
+        image_premio=rifa.image_premio,
+        precio=rifa.precio,
+        numeros_especiales=rifa.numeros_especiales,
+        boletas_vendidas=boletas_vendidas,
+    )
+
+    return rifa_response
 
 
 def verificar_rifas_activas(session: session_dependency):

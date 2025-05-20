@@ -115,18 +115,15 @@ def generarNumero(
 
 
 # obtener lista de numeros
-# def obtener_lista_numeros(
-#     session: session_dependency, rifa_activa: Rifa.Rifa
-# ) -> list[int]:
-#     numeros = session.exec(
-#         select(Boleta.numero).where(Boleta.id_rifa == rifa_activa.id)
-#     ).all()
-#     print(numeros)
-#     return numeros
-
-
-def obtener_lista_numeros():
-    return [1, 2, 3, 4]
+def obtener_lista_numeros(
+    session: session_dependency, rifa_activa: Rifa.Rifa
+) -> list[int]:
+    numeros = session.exec(
+        select(Boleta.numero).where(Boleta.id_rifa == rifa_activa.id)
+    ).all()
+    if not numeros:
+        return []
+    return numeros
 
 
 # Obtener lista de numeros especiales
@@ -143,10 +140,10 @@ def obtener_lista_numeros_especiales(
 
 # Crear numero en la base de datos
 def crear_numero(
-    session: session_dependency, usuario: int, rifa: int, lista_numeros: list[int]
+    session: session_dependency, usuario_id: int, rifa: int, lista_numeros: list[int]
 ) -> list[Boleta]:
     boletas = [
-        Boleta(numero=numero, id_rifa=rifa, id_usuario=usuario())
+        Boleta(numero=numero, id_rifa=rifa, id_usuario=usuario_id)
         for numero in lista_numeros
     ]
     session.add_all(boletas)
@@ -154,10 +151,9 @@ def crear_numero(
     return boletas
 
 
-# def comprar_boletas()
 def generar_compra_boletas(session: session_dependency, cantidad_comprada: int):
     rifa_activa = services.obtener_rifa_activa_numeros_espciales(session=session)
-    lista_numeros = obtener_lista_numeros()
+    lista_numeros = obtener_lista_numeros(session=session, rifa_activa=rifa_activa)
     lita_numeros_especiales = obtener_lista_numeros_especiales(
         session=session, rifa_activa=rifa_activa
     )
@@ -169,3 +165,8 @@ def generar_compra_boletas(session: session_dependency, cantidad_comprada: int):
         cantidad_comprada=cantidad_comprada,
     )
     return numeros_generados
+
+
+def obtener_numero_boletas_vendidas(session: session_dependency, id_rifa: int):
+    boletas = session.exec(select(Boleta).where(Boleta.id_rifa == id_rifa)).all()
+    return len(boletas)
