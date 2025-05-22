@@ -1,6 +1,4 @@
 from sqlmodel import SQLModel, Field
-from .Rifa import Rifa
-from .User import Users
 
 
 class Boleta(SQLModel, table=True):

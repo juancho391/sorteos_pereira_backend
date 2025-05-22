@@ -17,6 +17,11 @@ class UserNotFoundError(UserError):
         super().__init__(status_code=404, detail=mensaje)
 
 
+class UserCreationError(HTTPException):
+    def __init__(self, error: str):
+        super().__init__(status_code=500, detail=f"Fallo al crear el usuario: {error}")
+
+
 # Excepcion de autenticacion de usuario
 class AuthenticationError(HTTPException):
     def __init__(self, mensaje: str = "No se pudo validar el usuario"):
@@ -28,9 +33,14 @@ class RifaCreationError(HTTPException):
         super().__init__(status_code=500, detail=f"Fallo al crear la rifa: {error}")
 
 
-class RifaNotFoundError(HTTPException):
+class RifaIDNotFoundError(HTTPException):
     def __init__(self, id: int):
         super().__init__(status_code=404, detail=f"No se encontro la rifa con id {id}")
+
+
+class RifasNotFoundError(HTTPException):
+    def __init__(self):
+        super().__init__(status_code=404, detail=f"No se encontraron rifas")
 
 
 class NumeroEspecialCreationError(HTTPException):
@@ -47,6 +57,13 @@ class NumeroEspecialNotFoundError(HTTPException):
         )
 
 
+class NumerosEspecialesNotFoundError(HTTPException):
+    def __init__(self):
+        super().__init__(
+            status_code=404, detail=f"No se encontraron numeros especiales"
+        )
+
+
 class NumeroEspecialDeleteError(HTTPException):
     def __init__(self, error: str):
         super().__init__(
@@ -59,6 +76,11 @@ class BoletaNotFoundError(HTTPException):
         super().__init__(status_code=404, detail=f"No se encontro la boleta: {numero}")
 
 
+class BoletasCreationError(HTTPException):
+    def __init__(self, error: str):
+        super().__init__(status_code=500, detail=f"Fallo al crear las boletas: {error}")
+
+
 class RifaNotFoundError(HTTPException):
     def __init__(self):
-        super().__init__(status_code=404, detail=f"No se encontro la rifa")
+        super().__init__(status_code=404, detail=f"No se encontro rifa activa")

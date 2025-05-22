@@ -3,10 +3,13 @@ from sqlmodel import SQLModel
 
 
 class NumeroEspecialCreate(SQLModel):
-    id: Optional[int] = None
     numero: int
     id_rifa: int
-    disponible: bool
+    disponible: Optional[bool] = True
+
+
+class NumeroEspecialResponse(NumeroEspecialCreate):
+    id: int
 
 
 class Compra(SQLModel):

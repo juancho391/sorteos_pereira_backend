@@ -2,7 +2,7 @@ from sqlmodel import SQLModel, Field
 from typing import Optional
 
 
-class Compra(SQLModel):
+class CompraRequest(SQLModel):
     id_rifa: int
     nombre_completo: str
     telefono_celular: str

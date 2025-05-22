@@ -1,7 +1,4 @@
 from sqlmodel import SQLModel, Field
-from .User import Users
-from pydantic import EmailStr
-from .Rifa import Rifa
 
 
 class Compra(SQLModel, table=True):

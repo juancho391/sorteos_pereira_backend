@@ -14,10 +14,18 @@ class Users(SQLModel, table=True):
     password: str | None = Field(default=None)
 
 
-class UserResponse(SQLModel):
-    id: int
+class UserCreate(SQLModel):
     cedula: str
     email: EmailStr
     nombre: str
     direccion: str
     celular: str
+
+
+class UserResponse(UserCreate):
+    id: int
+
+
+class UserAdminCreate(UserCreate):
+    password: str
+    is_admin: bool | None = True

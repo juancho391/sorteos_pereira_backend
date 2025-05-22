@@ -1,6 +1,6 @@
 from sqlmodel import SQLModel, Field, Relationship
 from typing import Optional
-from datetime import time, date
+from datetime import date
 
 
 # Clase para crear la tabla

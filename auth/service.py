@@ -1,6 +1,6 @@
 from ..db.conexion import session_dependency
 from . import models
-from ..exceptions import UserNotFoundError, AuthenticationError
+from ..exceptions import UserNotFoundError, AuthenticationError, UserCreationError
 from ..entities import User
 from passlib.context import CryptContext
 from sqlmodel import select
@@ -82,12 +82,13 @@ def login_usuario(usuario: models.USerLogin, session: session_dependency):
     return models.Token(access_token=token, token_type="bearer")
 
 
-# def registrar_usuario(usuario: User.Users, session: session_dependency):
-#     try:
-#         usuario.password = obtener_contrasena_hash(contrasena=usuario.password)
-#         session.add(usuario)
-#         session.commit()
-#         session.refresh(usuario)
-#     except Exception as e:
-#         raise UserNotFoundError(error=str(e))
-#     return usuario
+def registrar_usuario(usuario: User.UserAdminCreate, session: session_dependency):
+    try:
+        usuario.password = obtener_contrasena_hash(contrasena=usuario.password)
+        usuario_admin = User.Users.model_validate(usuario)
+        session.add(usuario_admin)
+        session.commit()
+        session.refresh(usuario_admin)
+    except Exception as e:
+        raise UserCreationError(error=str(e))
+    return usuario_admin
