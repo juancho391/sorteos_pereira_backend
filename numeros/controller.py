@@ -1,35 +1,23 @@
-from fastapi import APIRouter, Request
-from . import service
+from fastapi import APIRouter
 from . import models
-from ..db.conexion import session_dependency
 from ..auth.service import Usuario_actual
-import json
+from .numeroService import numero_service_dependency
 
 
 router_numeros = APIRouter(tags=["Numeros"])
 
+
 # Endpoint para crear numero especial
-
-
-@router_numeros.post("/numero_especial")
+@router_numeros.post("/numero_especial", response_model=models.NumeroEspecialResponse)
 def crear_numero_especial(
-    numero_especial: models.NumeroEspecialCreate, sesesion: session_dependency
+    numero_especial: models.NumeroEspecialCreate,
+    numero_service: numero_service_dependency,
 ):
-    return service.crear_numero_especial(
-        numero_especial=numero_especial, session=sesesion
-    )
+    return numero_service.crear_numero_especial(numero_especial=numero_especial)
 
 
-@router_numeros.delete("/{numero}/{id_rifa}")
-def eliminar_numero_especial(numero: int, id_rifa: int, sesesion: session_dependency):
-    return service.eliminar_numero_especial(
-        numero=numero, session=sesesion, id_rifa=id_rifa
-    )
-
-
-@router_numeros.post("/webhook/mercadopago", status_code=200)
-async def mercadopago_webhook(request: Request):
-    data = await request.json()
-    print("Webhook data:", json.dumps(data, indent=2))
-    # Ejemplo: data['type'] == 'payment'
-    return {"status": "received"}
+# @router_numeros.delete("/{numero}/{id_rifa}")
+# def eliminar_numero_especial(numero: int, id_rifa: int, sesesion: session_dependency):
+#     return numeroService.eliminar_numero_especial(
+#         numero=numero, session=sesesion, id_rifa=id_rifa
+#     )
