@@ -1,57 +1,56 @@
 from fastapi import APIRouter, UploadFile, File, Form
-from . import services
+from ..users.models import User
+from ..auth.service import Usuario_actual
 from . import models
-from ..db.conexion import session_dependency
-from ..s3.service import upload_image
-from ..auth import service
-from ..entities.Rifa import Rifa
-from . import models
-from typing import Optional
 from .models import RifaCreate
+from .service import rifa_service_dependency
+from ..boleta.boletaService import boleta_service_dependency
+from ..users.services import user_service_dependency
 
 router_rifa = APIRouter(tags=["Rifa"])
 
 
 # Ednpoint para obtener todas las rifas
 @router_rifa.get("/", response_model=list[models.RifaResponse])
-def obtener_rifas(session: session_dependency, usuario_actual: service.Usuario_actual):
-    return services.obtener_rifas(session=session)
+def obtener_rifas(
+    rifa_service: rifa_service_dependency, usuario_actual: Usuario_actual
+):
+    return rifa_service.obtener_rifas()
 
 
 # Ednpoint para crear una rifa
 @router_rifa.post("/")
 def crear_rifa(
-    session: session_dependency,
-    usuario_actual: service.Usuario_actual,
+    usuario_actual: Usuario_actual,
+    rifa_service: rifa_service_dependency,
     premio: str = Form(...),
     tipo: str = Form(...),
     precio: int = Form(...),
     image: UploadFile = File(...),
-    is_active: Optional[bool] = Form(True),
 ):
-
-    image_url = upload_image(file=image)
-
-    rifa = RifaCreate(
-        premio=premio,
-        tipo=tipo,
-        is_active=is_active,
-        precio=precio,
-        image_premio=image_url,
-    )
-    return services.crear_rifa(session=session, rifa=rifa)
+    rifa = RifaCreate(premio=premio, tipo=tipo, precio=precio)
+    return rifa_service.crear_rifa(rifa=rifa, image=image)
 
 
 @router_rifa.get("/activa", response_model=models.RifaResponse)
-def obtener_rifa(session: session_dependency):
-    return services.obtener_rifa_activa_numeros_espciales(session=session)
+def obtener_rifa(rifa_service: rifa_service_dependency):
+    return rifa_service.obtener_rifa_activa()
 
 
-@router_rifa.put("/{id}/desactivar")
-def finalizar_rifa(id: int, session: session_dependency):
-    return services.finalizar_rifa(session=session, id=id)
+@router_rifa.patch("/{id}/desactivar")
+def finalizar_rifa(
+    id: int, rifa_service: rifa_service_dependency, usuario_actual: Usuario_actual
+):
+    return rifa_service.desactivar_rifa(rifa_id=id)
 
 
-@router_rifa.get("/ganador")
-def obtener_ganador(session: session_dependency, boleta: models.BoletaConsulta):
-    return services.obtener_ganador(session=session, boleta=boleta)
+@router_rifa.get("/{id}/{numero}/", response_model=User)
+def obtener_ganador(
+    id: int,
+    numero: int,
+    boleta_service: boleta_service_dependency,
+    user_service: user_service_dependency,
+    usuario_actual: Usuario_actual,
+):
+    boleta_otbtenida = boleta_service.obtener_ganador(id_rifa=id, numero=numero)
+    return user_service.obtener_usuario_id(id_user=boleta_otbtenida.id_usuario)
