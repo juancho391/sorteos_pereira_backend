@@ -1,6 +1,6 @@
 from .db.conexion import create_tables_and_db
-from fastapi import FastAPI, Depends
-from .entities.Boleta import Boleta
+from fastapi import FastAPI
+from .entities import *
 from fastapi.middleware.cors import CORSMiddleware
 from .api import registrar_routers
 
@@ -14,7 +14,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# app.include_router(numero_router.numero_router, prefix="/api")
 
 registrar_routers(app=app)
 
