@@ -10,30 +10,22 @@ class Numero_especial(SQLModel):
     disponible: bool | None = True
 
 
+class RifaBAse(SQLModel):
+    id: int | None = None
+
+
 class RifaCreate(SQLModel):
-    id: Optional[int] = None
     premio: str
     tipo: str
-    is_active: Optional[bool] = True
-    fecha_inicio: Optional[str] = None
-    fecha_fin: Optional[str] = None
     image_premio: Optional[str] = None
     precio: int
 
 
-class RifaResponse(SQLModel):
+class RifaResponse(RifaCreate):
     id: int
-    premio: str
-    tipo: str
     is_active: bool
     fecha_inicio: date
     fecha_fin: Optional[date] = None
-    image_premio: str
     precio: int
     numeros_especiales: list[Numero_especial] = []
     boletas_vendidas: Optional[int] = 0
-
-
-class BoletaConsulta(SQLModel):
-    numero: int
-    id_rifa: int
