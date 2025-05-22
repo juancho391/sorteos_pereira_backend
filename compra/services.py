@@ -1,133 +1,172 @@
 import requests
 from dotenv import load_dotenv
 import os
-from ..numeros import service
 from pprint import pprint as pp
+from typing import Annotated
+from fastapi import Depends
 from ..Correos.service import send_email
-from ..db.conexion import session_dependency
-from .models import PagoResponse
+from .compraRepository import compra_repository_depedency
 import httpx
 from . import models
-from ..users.services import crearUser, obtenerUsuario
+from ..users.services import user_service_dependency
 from ..users.models import UserCreate
-from ..entities.Compra import Compra
+from ..utils.generar_numeros import generador_numeros_dependency
+from ..boleta.boletaService import boleta_service_dependency
 
 load_dotenv()
 
 ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
 
 
-async def crear_preferencia(compra: models.Compra):
-    preferencia = {
-        "items": [
-            {
-                "title": "Boleta para el sorteo",
-                "quantity": compra.cantidad,
-                "currency_id": "COP",
-                "unit_price": compra.precio,
-            }
-        ],
-        "payer": {"name": compra.nombre_completo, "email": compra.email},
-        "back_urls": {
-            "success": "https://localhost:3000/aprobado",
-            "failure": "https://localhost:3000/denegado",
-            "pending": "https://localhost:3000/pendiente",
-        },
-        "auto_return": "approved",
-        "notification_url": "https://5e64-2800-484-a71d-5400-580d-c94b-21a3-a47e.ngrok-free.app/compra/webhook/mercadopago",  # Webhook
-        "metadata": {
-            "compra_id": compra.id_rifa,
-            "email": compra.email,
-            "telefono": compra.telefono_celular,
-            "cedula": compra.cedula,
-            "direccion": compra.direccion,
-            "nombre": compra.nombre_completo,
-        },
-    }
+class CompraService:
+    def __init__(
+        self,
+        compra_repository: compra_repository_depedency,
+        usuario_service: user_service_dependency,
+        generador_numeros: generador_numeros_dependency,
+        boleta_service: boleta_service_dependency,
+    ):
+        self.compra_repository = compra_repository
+        self.usuario_service = usuario_service
+        self.generador_numeros = generador_numeros
+        self.boleta_service = boleta_service
 
-    headers = {
-        "Authorization": f"Bearer {ACCESS_TOKEN}",
-        "Content-Type": "application/json",
-    }
-    async with httpx.AsyncClient() as client:
-        response = await client.post(
-            "https://api.mercadopago.com/checkout/preferences",
-            json=preferencia,
-            headers=headers,
-        )
-    if response.status_code == 201:
-        init_point = response.json()["init_point"]
-        return models.CompraResponse(init_point=init_point)
-    raise Exception("Error al crear la compra")
+    def crear_compra(self, compra: models.CompraCreate):
+        nueva_compra = self.compra_repository.crear_compra(compra=compra)
+        if not nueva_compra:
+            with open("log.txt", "a") as f:
+                f.write(
+                    f"Error al crear la compra: {compra.id_rifa} - {compra.cantidad} - {compra.id_usuario}\n"
+                )
+        return nueva_compra
 
+    async def crear_preferencia(self, compra: models.CompraCreate):
+        preferencia = {
+            "items": [
+                {
+                    "title": "Boleta para el sorteo",
+                    "quantity": compra.cantidad,
+                    "currency_id": "COP",
+                    "unit_price": compra.precio,
+                }
+            ],
+            "payer": {"name": compra.nombre_completo, "email": compra.email},
+            "back_urls": {
+                "success": "https://localhost:3000/aprobado",
+                "failure": "https://localhost:3000/denegado",
+                "pending": "https://localhost:3000/pendiente",
+            },
+            "auto_return": "approved",
+            "notification_url": "https://c77e-2800-484-a71d-5400-7090-5cfb-5db6-ea84.ngrok-free.app/compra/webhook/mercadopago",  # Webhook
+            "metadata": {
+                "compra_id": compra.id_rifa,
+                "email": compra.email,
+                "telefono": compra.telefono_celular,
+                "cedula": compra.cedula,
+                "direccion": compra.direccion,
+                "nombre": compra.nombre_completo,
+            },
+        }
 
-def crear_compra(compra: models.CompraCreate, session: session_dependency):
-    nueva_compra = Compra.model_validate(compra)
-    session.add(nueva_compra)
-    session.commit()
-    session.refresh(nueva_compra)
-    return nueva_compra
-
-
-async def check_payment_status(payment_id: str, session: session_dependency):
-    # Verificamos el estado de la compra en mercadopago
-    url = f"https://api.mercadopago.com/v1/payments/{payment_id}"
-    headers = {"Authorization": f"Bearer {ACCESS_TOKEN}"}
-
-    # Realizamos la peticion
-    response = requests.get(url, headers=headers)
-
-    data = response.json()
-    status = data.get("status")
-
-    if status == "approved":
-        cantidad = int(data["additional_info"]["items"][0]["quantity"])
-        email = data["metadata"]["email"]
-        celular = data["metadata"]["telefono"]
-        cedula = data["metadata"]["cedula"]
-        direccion = data["metadata"]["direccion"]
-        total = int(data["transaction_details"]["total_paid_amount"])
-        id_rifa = int(data["metadata"]["compra_id"])
-        nombre = data["metadata"]["nombre"]
-
-        # Generamos las boletas
-        boletas_generados = service.generar_compra_boletas(
-            session=session, cantidad_comprada=int(cantidad)
-        )
-        # Obtenemos el usuario y Verificamos si el usuario existe
-        usuario = obtenerUsuario(session=session, cedula=cedula)
-        if not usuario:
-            # si no existe lo creamos
-            print("Ingreso user", usuario)
-            usuario = UserCreate(
-                nombre=nombre,
-                email=email,
-                celular=celular,
-                cedula=cedula,
-                direccion=direccion,
+        headers = {
+            "Authorization": f"Bearer {ACCESS_TOKEN}",
+            "Content-Type": "application/json",
+        }
+        async with httpx.AsyncClient() as client:
+            response = await client.post(
+                "https://api.mercadopago.com/checkout/preferences",
+                json=preferencia,
+                headers=headers,
             )
-            usuario = crearUser(session=session, user_compra=usuario)
+        if response.status_code == 201:
+            init_point = response.json()["init_point"]
+            return models.CompraResponse(init_point=init_point)
+        raise Exception("Error al crear la compra")
 
-        # Guardamos las boletas en la bd
-        service.crear_numero(
-            session=session,
-            usuario_id=usuario.id,
-            rifa=id_rifa,
-            lista_numeros=boletas_generados,
-        )
-        # Creamos la Compra
-        nueva_compra = models.CompraCreate(
-            id_rifa=id_rifa, cantidad=cantidad, total=total, id_usuario=usuario.id
-        )
-        # Guardamos laa compra en la bd
-        compra = crear_compra(compra=nueva_compra, session=session)
-        numeros = str()
-        for numero in boletas_generados:
-            numeros += f" {numero} "
+    async def check_payment_status(
+        self,
+        payment_id: str,
+    ):
+        # Verificamos el estado de la compra en mercadopago
+        url = f"https://api.mercadopago.com/v1/payments/{payment_id}"
+        headers = {"Authorization": f"Bearer {ACCESS_TOKEN}"}
 
-        # Cuerpo del mensaje del correo
-        body = f"Hola {nombre} estos son los numeros con los que participaras en el sorteo: {numeros}"
-        # Mandemos emensaje al correo
-        send_email(
-            subject="Boletas compradas", body=body, to_email="jhostinposada7@gmail.com"
-        )
+        # Realizamos la peticion
+        response = requests.get(url, headers=headers)
+
+        data = response.json()
+        pp(data)
+        status = data.get("status")
+
+        if status == "approved":
+            cantidad = int(data["additional_info"]["items"][0]["quantity"])
+            email = data["metadata"]["email"]
+            celular = data["metadata"]["telefono"]
+            cedula = data["metadata"]["cedula"]
+            direccion = data["metadata"]["direccion"]
+            total = int(data["transaction_details"]["total_paid_amount"])
+            id_rifa = int(data["metadata"]["compra_id"])
+            nombre = data["metadata"]["nombre"]
+
+            # Generamos las boletas
+            numeros_generados = self.generador_numeros.generar_compra_boletas(
+                cantidad_comprada=cantidad, id_rifa=id_rifa
+            )
+
+            # Verificamos si el usuario existe
+            usuario = self.usuario_service.obtener_usuario_cedula(cedula=cedula)
+            if not usuario:
+                print("Creando usuario por primera vez")
+                # si no existe lo creamos
+                usuario = UserCreate(
+                    nombre=nombre,
+                    email=email,
+                    celular=celular,
+                    cedula=cedula,
+                    direccion=direccion,
+                )
+                # Refactorizar esto para usar el servicio del usuario
+                usuario = self.usuario_service.crear_usuario(usuario=usuario)
+
+            # Guardamos las boletas en la bd
+            self.boleta_service.crear_boletas(
+                usuario_id=usuario.id,
+                rifa_id=id_rifa,
+                lista_numeros=numeros_generados,
+            )
+            # Creamos la Compra
+            nueva_compra = models.CompraCreate(
+                id_rifa=id_rifa, cantidad=cantidad, total=total, id_usuario=usuario.id
+            )
+            # Guardamos laa compra en la bd
+            compra = self.crear_compra(compra=nueva_compra)
+            numeros = str()
+            for numero in numeros_generados:
+                numeros += f" {numero} "
+
+            # Cuerpo del mensaje del correo
+            body = f"Hola {nombre} estos son los numeros con los que participaras en el sorteo: {numeros}"
+            # Mandemos emensaje al correo
+            send_email(
+                subject="Boletas compradas",
+                body=body,
+                to_email="jhostinposada7@gmail.com",
+            )
+            return True
+
+
+def get_compra_service(
+    compra_repository: compra_repository_depedency,
+    usuario_service: user_service_dependency,
+    generador_numeros: generador_numeros_dependency,
+    boleta_service: boleta_service_dependency,
+):
+    return CompraService(
+        compra_repository=compra_repository,
+        usuario_service=usuario_service,
+        generador_numeros=generador_numeros,
+        boleta_service=boleta_service,
+    )
+
+
+compra_service_dependency = Annotated[CompraService, Depends(get_compra_service)]
