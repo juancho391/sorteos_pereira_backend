@@ -44,6 +44,9 @@ class NumeroService:
             return []
         return numeros_especiales
 
+    def cambiar_disponibilidad_numero_especial(self, numero: int, id_rifa: int):
+        return self.numero_repository.actualizar_numero(numero=numero, id_rifa=id_rifa)
+
 
 def get_numero_service(numero_repository: numero_repository_dependency):
     return NumeroService(numero_repository=numero_repository)
