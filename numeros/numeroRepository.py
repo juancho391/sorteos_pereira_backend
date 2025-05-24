@@ -32,6 +32,17 @@ class NumeroRepository:
             )
         ).all()
 
+    def actualizar_numero(self, numero: int, id_rifa: int):
+        numero_obtenido = self.session.exec(
+            select(Numero_especial).where(
+                Numero_especial.id_rifa == id_rifa, Numero_especial.numero == numero
+            )
+        ).first()
+        numero_obtenido.disponible = False
+        self.session.add(numero_obtenido)
+        self.session.commit()
+        return numero_obtenido
+
 
 def get_numero_repository(session: session_dependency):
     return NumeroRepository(session=session)
