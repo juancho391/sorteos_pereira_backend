@@ -1,6 +1,7 @@
 from datetime import date
 from typing import Optional
 from sqlmodel import SQLModel
+from ..entities.Boleta import Boleta
 
 
 class Numero_especial(SQLModel):
@@ -28,4 +29,4 @@ class RifaResponse(RifaCreate):
     fecha_fin: Optional[date] = None
     precio: int
     numeros_especiales: list[Numero_especial] = []
-    boletas_vendidas: Optional[int] = 0
+    boletas: list[Boleta] = []

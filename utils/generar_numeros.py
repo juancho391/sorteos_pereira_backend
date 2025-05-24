@@ -13,7 +13,6 @@ class GeneradorNumeros:
         service_numeros: boleta_service_dependency,
         service_numeros_especiales: numero_service_dependency,
     ):
-        print("GeneradorNumeros init")
         self.rifa_service = rifa_service
         self.service_numeros = service_numeros
         self.numeros_especiales_service = service_numeros_especiales
@@ -23,9 +22,9 @@ class GeneradorNumeros:
         lista_numeros: list[int],
         cantidad_numeros: int,
         lista_numeros_especiales: list[int],
+        rifa_id: int,
         cantidad_comprada: int = 3,
     ) -> int:
-        print("generando numeros")
         numeros_disponibles = cantidad_numeros - len(lista_numeros)
         if numeros_disponibles < cantidad_comprada:
             raise ValueError("No hay suficientes numeros disponibles para la compra")
@@ -45,10 +44,15 @@ class GeneradorNumeros:
                 else:
                     lista_numeros_generados.append(numero)
                     contador += 1
+
+        for numero in lista_numeros_generados:
+            if numero in lista_numeros_especiales:
+                self.numeros_especiales_service.cambiar_disponibilidad_numero_especial(
+                    numero=numero, id_rifa=rifa_id
+                )
         return lista_numeros_generados
 
     def generar_compra_boletas(self, cantidad_comprada: int, id_rifa: int):
-        print("pasando argumentos para generar numeros")
         rifa_activa = self.rifa_service.obtener_rifa_id(rifa_id=id_rifa)
         lista_numeros = self.service_numeros.obtener_boletas_vendidas(id_rifa=id_rifa)
         lita_numeros_especiales = self.numeros_especiales_service.obtener_numeros_rifa(
@@ -59,6 +63,7 @@ class GeneradorNumeros:
             cantidad_numeros=9999,
             lista_numeros_especiales=lita_numeros_especiales,
             cantidad_comprada=cantidad_comprada,
+            rifa_id=rifa_activa.id,
         )
         return numeros_generados
 

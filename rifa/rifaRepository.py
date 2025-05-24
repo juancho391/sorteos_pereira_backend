@@ -18,6 +18,7 @@ class RifaRepository:
         return nueva_rifa
 
     def obtener_rifas(self):
+        # Obtenemos las rifas con el numero de boletas que se han vendido haciendo un join entre rifa y boleta
         return self.session.exec(select(Rifa)).all()
 
     def obtener_rifa_activa(self):
