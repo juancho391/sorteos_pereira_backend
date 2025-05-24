@@ -150,7 +150,7 @@ class CompraService:
             send_email(
                 subject="Boletas compradas",
                 body=body,
-                to_email="jhostinposada7@gmail.com",
+                to_email=email,
             )
             return True
 
