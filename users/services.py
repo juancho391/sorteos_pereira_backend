@@ -15,10 +15,9 @@ class UserService:
         return usuarios
 
     def crear_usuario(self, usuario: UserCreate):
-        usuarios_existentes = self.obtener_usuarios()
-        for user in usuarios_existentes:
-            if user.cedula == usuario.cedula:
-                return False
+        usuario_db = self.users_repository.obtener_usuario_cedula(cedula=usuario.cedula)
+        if usuario_db:
+            return False
         return self.users_repository.crear_usuario(usuario=usuario)
 
     def obtener_usuario_cedula(self, cedula: str):

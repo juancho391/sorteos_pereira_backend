@@ -1,7 +1,6 @@
 import requests
 from dotenv import load_dotenv
 import os
-from pprint import pprint as pp
 from typing import Annotated
 from fastapi import Depends
 from ..Correos.service import send_email
@@ -95,7 +94,6 @@ class CompraService:
         response = requests.get(url, headers=headers)
 
         data = response.json()
-        pp(data)
         status = data.get("status")
 
         if status == "approved":
@@ -116,7 +114,6 @@ class CompraService:
             # Verificamos si el usuario existe
             usuario = self.usuario_service.obtener_usuario_cedula(cedula=cedula)
             if not usuario:
-                print("Creando usuario por primera vez")
                 # si no existe lo creamos
                 usuario = UserCreate(
                     nombre=nombre,
@@ -125,7 +122,6 @@ class CompraService:
                     cedula=cedula,
                     direccion=direccion,
                 )
-                # Refactorizar esto para usar el servicio del usuario
                 usuario = self.usuario_service.crear_usuario(usuario=usuario)
 
             # Guardamos las boletas en la bd
@@ -146,7 +142,7 @@ class CompraService:
 
             # Cuerpo del mensaje del correo
             body = f"Hola {nombre} estos son los numeros con los que participaras en el sorteo: {numeros}"
-            # Mandemos emensaje al correo
+            # Mandamos mensaje al correo
             send_email(
                 subject="Boletas compradas",
                 body=body,

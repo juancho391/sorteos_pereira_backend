@@ -6,7 +6,7 @@ class Users(SQLModel, table=True):
     __tablename__ = "Users"
     id: int | None = Field(default=None, primary_key=True)
     cedula: str = Field(unique=True)
-    email: EmailStr = Field(unique=True)
+    email: EmailStr = Field(unique=True, index=True)
     nombre: str
     direccion: str
     celular: str
