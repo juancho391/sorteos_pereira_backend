@@ -15,7 +15,7 @@ s3 = boto3.client(
 BUCKET_NAME = os.getenv("AWS_STORAGE_BUCKET_NAME")
 
 
-def upload_image(file, folder="post_images"):
+def upload_image(file, folder="rifa_images"):
     try:
         s3.upload_fileobj(
             file.file,
