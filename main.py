@@ -1,8 +1,8 @@
-from db.conexion import create_tables_and_db
+from .db.conexion import create_tables_and_db
 from fastapi import FastAPI
-from entities import *
+from .entities import *
 from fastapi.middleware.cors import CORSMiddleware
-from api import registrar_routers
+from .api import registrar_routers
 
 app = FastAPI()
 

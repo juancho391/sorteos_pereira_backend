@@ -17,15 +17,13 @@ class NumeroService:
 
     def crear_numero_especial(self, numero_especial: NumeroEspecialCreate):
         try:
-            numeros_especiales_existentes = self.numero_repository.obtener_numeros()
-            for numero in numeros_especiales_existentes:
-                if (
-                    numero.numero == numero_especial.numero
-                    and numero.id_rifa == numero_especial.id_rifa
-                ):
-                    raise NumeroEspecialCreationError(
-                        error="El numero ya existe en la rifa"
-                    )
+            numero_especial_db = self.numero_repository.obtener_numeros_numero_idRifa(
+                id_rifa=numero_especial.id_rifa, numero=numero_especial.numero
+            )
+            if numero_especial_db:
+                raise NumeroEspecialCreationError(
+                    error="El numero ya existe en la rifa"
+                )
             return self.numero_repository.crear_numero(numero=numero_especial)
         except Exception as e:
             raise NumeroEspecialCreationError(error=str(e))

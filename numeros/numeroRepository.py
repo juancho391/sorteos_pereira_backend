@@ -24,6 +24,13 @@ class NumeroRepository:
     def obtener_numero_id(self, numero_id: int) -> Numero_especial:
         return self.session.get(Numero_especial, numero_id)
 
+    def obtener_numeros_numero_idRifa(self, id_rifa: int, numero: int):
+        return self.session.exec(
+            select(Numero_especial).where(
+                Numero_especial.id_rifa == id_rifa, Numero_especial.numero == numero
+            )
+        ).first()
+
     def obtener_numeros_rifa(self, rifa_activa: Rifa) -> list[int]:
         print("Obtener numeros rifa : NumeroRepository")
         return self.session.exec(

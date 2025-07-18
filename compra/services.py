@@ -51,12 +51,11 @@ class CompraService:
             ],
             "payer": {"name": compra.nombre_completo, "email": compra.email},
             "back_urls": {
-                "success": "https://localhost:3000/aprobado",
-                "failure": "https://localhost:3000/denegado",
-                "pending": "https://localhost:3000/pendiente",
+                "success": "https://mega-sorteos-pereira-c488.vercel.app/aprobado",
+                "failure": "https://mega-sorteos-pereira-c488.vercel.app/denegado",
             },
             "auto_return": "approved",
-            "notification_url": "https://c77e-2800-484-a71d-5400-7090-5cfb-5db6-ea84.ngrok-free.app/compra/webhook/mercadopago",  # Webhook
+            "notification_url": "https://api-sorteos-1-0.onrender.com/compra/webhook/mercadopago",  # Webhook
             "metadata": {
                 "compra_id": compra.id_rifa,
                 "email": compra.email,
