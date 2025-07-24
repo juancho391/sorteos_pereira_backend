@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from db import create_tables_and_db
+from .db.conexion import create_tables_and_db
 
 from .api import registrar_routers
 from .entities import *
