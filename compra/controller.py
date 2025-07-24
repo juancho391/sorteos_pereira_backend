@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Request
+
 from . import models
 from .services import compra_service_dependency
-import json
 
 router_compra = APIRouter(tags=["compra"])
 

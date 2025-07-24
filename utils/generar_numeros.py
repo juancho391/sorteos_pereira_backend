@@ -1,9 +1,11 @@
-from ..rifa.service import rifa_service_dependency
+import random
+from typing import Annotated
+
+from fastapi import Depends
+
 from ..boleta.boletaService import boleta_service_dependency
 from ..numeros.numeroService import numero_service_dependency
-import random
-from fastapi import Depends
-from typing import Annotated
+from ..rifa.service import rifa_service_dependency
 
 
 class GeneradorNumeros:
@@ -32,7 +34,7 @@ class GeneradorNumeros:
         contador = 0
         contador_premiados = 0
         verificar = self.rifa_service.verificar_rifas_activas()
-        if verificar == True:
+        if verificar:
             raise ValueError("No se pueden generar numeros, hay mas de una rifa activa")
         while contador < cantidad_comprada:
             numero = random.randint(1, cantidad_numeros)

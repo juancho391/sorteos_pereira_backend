@@ -1,8 +1,10 @@
-from ..db.conexion import session_dependency
-from ..entities.Boleta import Boleta
 from typing import Annotated
+
 from fastapi import Depends
 from sqlmodel import select
+
+from ..db.conexion import session_dependency
+from ..entities.Boleta import Boleta
 
 
 class BoletaRepository:

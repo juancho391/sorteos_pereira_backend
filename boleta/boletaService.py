@@ -1,8 +1,10 @@
-from .boletaRepository import boleta_repository_dependency
-from ..entities.Boleta import Boleta
 from typing import Annotated
+
 from fastapi import Depends
-from ..exceptions import BoletasCreationError, BoletaNotFoundError
+
+from ..entities.Boleta import Boleta
+from ..exceptions import BoletaNotFoundError, BoletasCreationError
+from .boletaRepository import boleta_repository_dependency
 
 
 class BoletaService:

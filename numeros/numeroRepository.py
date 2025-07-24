@@ -1,10 +1,12 @@
-from ..db.conexion import session_dependency
-from .models import NumeroEspecialCreate
-from fastapi import Depends
 from typing import Annotated
-from ..entities.Numero import Numero_especial
+
+from fastapi import Depends
 from sqlmodel import select
+
+from ..db.conexion import session_dependency
+from ..entities.Numero import Numero_especial
 from ..entities.Rifa import Rifa
+from .models import NumeroEspecialCreate
 
 
 class NumeroRepository:

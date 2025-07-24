@@ -1,11 +1,12 @@
-from fastapi import APIRouter, UploadFile, File, Form
-from ..users.models import User
+from fastapi import APIRouter, File, Form, UploadFile
+
 from ..auth.service import Usuario_actual
+from ..boleta.boletaService import boleta_service_dependency
+from ..users.models import User
+from ..users.services import user_service_dependency
 from . import models
 from .models import RifaCreate
 from .service import rifa_service_dependency
-from ..boleta.boletaService import boleta_service_dependency
-from ..users.services import user_service_dependency
 
 router_rifa = APIRouter(tags=["Rifa"])
 

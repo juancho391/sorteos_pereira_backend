@@ -1,8 +1,9 @@
 from fastapi import FastAPI
+
 from .auth.controller import auth_router
-from .rifa.controller import router_rifa
-from .numeros.controller import router_numeros
 from .compra.controller import router_compra
+from .numeros.controller import router_numeros
+from .rifa.controller import router_rifa
 
 
 def registrar_routers(app: FastAPI):

@@ -1,9 +1,11 @@
-from ..db.conexion import session_dependency
-from .models import RifaCreate
-from ..entities.Rifa import Rifa
-from sqlmodel import select
-from fastapi import Depends
 from typing import Annotated
+
+from fastapi import Depends
+from sqlmodel import select
+
+from ..db.conexion import session_dependency
+from ..entities.Rifa import Rifa
+from .models import RifaCreate
 
 
 class RifaRepository:
@@ -22,10 +24,10 @@ class RifaRepository:
         return self.session.exec(select(Rifa)).all()
 
     def obtener_rifa_activa(self):
-        return self.session.exec(select(Rifa).where(Rifa.is_active == True)).first()
+        return self.session.exec(select(Rifa).where(Rifa.is_active.is_(True))).first()
 
     def obtener_rifas_activas(self):
-        return self.session.exec(select(Rifa).where(Rifa.is_active == True)).all()
+        return self.session.exec(select(Rifa).where(Rifa.is_active.is_(True))).all()
 
     def obtener_rifa_id(self, rifa_id: int):
         rifa = self.session.get(Rifa, rifa_id)

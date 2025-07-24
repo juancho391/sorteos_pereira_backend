@@ -1,6 +1,8 @@
-from .models import UserCreate
 from typing import Annotated
+
 from fastapi import Depends
+
+from .models import UserCreate
 from .userRepository import user_repository_dependency
 
 

@@ -1,9 +1,8 @@
 from fastapi import APIRouter
-from ..db.conexion import session_dependency
-from . import models
-from . import service
-from ..entities.User import UserAdminCreate, UserResponse
 
+from ..db.conexion import session_dependency
+from ..entities.User import UserAdminCreate, UserResponse
+from . import models, service
 
 auth_router = APIRouter(tags=["Auth"])
 

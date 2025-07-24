@@ -1,6 +1,8 @@
 from datetime import date
 from typing import Optional
+
 from sqlmodel import SQLModel
+
 from ..entities.Boleta import Boleta
 
 

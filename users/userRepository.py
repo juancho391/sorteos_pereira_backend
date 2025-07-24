@@ -1,9 +1,11 @@
-from ..entities.User import Users
-from fastapi import Depends
 from typing import Annotated
-from .models import UserCreate
-from ..db.conexion import session_dependency
+
+from fastapi import Depends
 from sqlmodel import select
+
+from ..db.conexion import session_dependency
+from ..entities.User import Users
+from .models import UserCreate
 
 
 class UserRepository:
@@ -18,7 +20,7 @@ class UserRepository:
         return nuevo_usuario
 
     def obtener_usuarios(self):
-        return self.session.exec(select(Users).where(Users.is_admin == False)).all()
+        return self.session.exec(select(Users).where(Users.is_admin.is_(False))).all()
 
     def obtener_usuario_cedula(self, cedula: str):
         return self.session.exec(select(Users).where(Users.cedula == cedula)).first()

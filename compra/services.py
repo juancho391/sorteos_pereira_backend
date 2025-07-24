@@ -1,16 +1,18 @@
-import requests
-from dotenv import load_dotenv
 import os
 from typing import Annotated
-from fastapi import Depends
-from ..Correos.service import send_email
-from .compraRepository import compra_repository_depedency
+
 import httpx
-from . import models
-from ..users.services import user_service_dependency
-from ..users.models import UserCreate
-from ..utils.generar_numeros import generador_numeros_dependency
+import requests
+from dotenv import load_dotenv
+from fastapi import Depends
+
 from ..boleta.boletaService import boleta_service_dependency
+from ..Correos.service import send_email
+from ..users.models import UserCreate
+from ..users.services import user_service_dependency
+from ..utils.generar_numeros import generador_numeros_dependency
+from . import models
+from .compraRepository import compra_repository_depedency
 
 load_dotenv()
 
@@ -133,8 +135,8 @@ class CompraService:
             nueva_compra = models.CompraCreate(
                 id_rifa=id_rifa, cantidad=cantidad, total=total, id_usuario=usuario.id
             )
-            # Guardamos laa compra en la bd
-            compra = self.crear_compra(compra=nueva_compra)
+            # Guardamos la compra en la bd
+            self.crear_compra(compra=nueva_compra)
             numeros = str()
             for numero in numeros_generados:
                 numeros += f" {numero} "

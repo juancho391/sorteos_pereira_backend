@@ -1,14 +1,16 @@
-from ..utils.s3 import upload_image
 from typing import Annotated
+
 from fastapi import Depends
-from .rifaRepository import rifa_repository_dependency
-from .models import RifaCreate
+
 from ..exceptions import (
     RifaCreationError,
-    RifasNotFoundError,
-    RifaNotFoundError,
     RifaIDNotFoundError,
+    RifaNotFoundError,
+    RifasNotFoundError,
 )
+from ..utils.s3 import upload_image
+from .models import RifaCreate
+from .rifaRepository import rifa_repository_dependency
 
 
 class RifaService:

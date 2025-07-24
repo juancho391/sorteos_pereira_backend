@@ -1,8 +1,7 @@
 from fastapi import APIRouter
-from . import models
-from ..auth.service import Usuario_actual
-from .numeroService import numero_service_dependency
 
+from . import models
+from .numeroService import numero_service_dependency
 
 router_numeros = APIRouter(tags=["Numeros"])
 

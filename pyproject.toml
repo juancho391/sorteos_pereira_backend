@@ -1,0 +1,9 @@
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+exclude = ["__pycache__", "migrations"]
+select = ["F", "W"]
+
+[tool.ruff.per-file-ignores]
+"main.py" = ["F401", "F403"]           # Ignora imports no usados solo en main.py
+"entities/Rifa.py" = ["F821"]  # Ignora nombres no definidos solo en rifa.py

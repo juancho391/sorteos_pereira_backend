@@ -1,8 +1,10 @@
-from ..db.conexion import session_dependency
-from .models import CompraCreate
-from ..entities.Compra import Compra
 from typing import Annotated
+
 from fastapi import Depends
+
+from ..db.conexion import session_dependency
+from ..entities.Compra import Compra
+from .models import CompraCreate
 
 
 class CompraRepository:

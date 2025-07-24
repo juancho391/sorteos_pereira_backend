@@ -40,7 +40,7 @@ class RifaIDNotFoundError(HTTPException):
 
 class RifasNotFoundError(HTTPException):
     def __init__(self):
-        super().__init__(status_code=404, detail=f"No se encontraron rifas")
+        super().__init__(status_code=404, detail="No se encontraron rifas")
 
 
 class NumeroEspecialCreationError(HTTPException):
@@ -59,9 +59,7 @@ class NumeroEspecialNotFoundError(HTTPException):
 
 class NumerosEspecialesNotFoundError(HTTPException):
     def __init__(self):
-        super().__init__(
-            status_code=404, detail=f"No se encontraron numeros especiales"
-        )
+        super().__init__(status_code=404, detail="No se encontraron numeros especiales")
 
 
 class NumeroEspecialDeleteError(HTTPException):
@@ -83,4 +81,4 @@ class BoletasCreationError(HTTPException):
 
 class RifaNotFoundError(HTTPException):
     def __init__(self):
-        super().__init__(status_code=404, detail=f"No se encontro rifa activa")
+        super().__init__(status_code=404, detail="No se encontro rifa activa")
