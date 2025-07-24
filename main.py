@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from db import create_tables_and_db
 
 from .api import registrar_routers
 from .entities import *
@@ -18,6 +19,6 @@ app.add_middleware(
 registrar_routers(app=app)
 
 
-# @app.on_event("startup")
-# def on_startup():
-#     create_tables_and_db()
+@app.on_event("startup")
+def on_startup():
+    create_tables_and_db()
