@@ -29,4 +29,4 @@ jobs:
           --push .
       - name: Trigger render webhook deploy
         run: |
-          curl -X POST "${{ secrets.RENDER_WEBHOOK_DEPLOY_URL}}"
+          curl -X POST "${{ secrets.RENDER_WEBHOOOK_DEPLOY_URL}}"
