@@ -17,7 +17,7 @@ class NumeroService:
 
     def crear_numero_especial(self, numero_especial: NumeroEspecialCreate):
         try:
-            numero_especial_db = self.numero_repository.obtener_numeros_numero_idRifa(
+            numero_especial_db = self.numero_repository.obtener_numero_especial_id_rifa(
                 id_rifa=numero_especial.id_rifa, numero=numero_especial.numero
             )
             if numero_especial_db:
@@ -31,7 +31,7 @@ class NumeroService:
     def obtener_numeros_especiales(self):
         numeros_especiales = self.numero_repository.obtener_numeros()
         if not numeros_especiales:
-            raise []
+            return []
         return numeros_especiales
 
     def obtener_numeros_rifa(self, rifa_activa: Rifa.Rifa):
