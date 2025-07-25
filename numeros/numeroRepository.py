@@ -4,7 +4,7 @@ from fastapi import Depends
 from sqlmodel import select
 
 from ..db.conexion import session_dependency
-from ..entities.Numero import Numero_especial
+from ..entities.Numero import NumeroEspecial
 from ..entities.Rifa import Rifa
 from .models import NumeroEspecialCreate
 
@@ -13,38 +13,37 @@ class NumeroRepository:
     def __init__(self, session: session_dependency):
         self.session = session
 
-    def crear_numero(self, numero: NumeroEspecialCreate) -> Numero_especial:
-        nuevo_numero = Numero_especial.model_validate(numero)
+    def crear_numero(self, numero: NumeroEspecialCreate) -> NumeroEspecial:
+        nuevo_numero = NumeroEspecial.model_validate(numero)
         self.session.add(nuevo_numero)
         self.session.commit()
         self.session.refresh(nuevo_numero)
         return nuevo_numero
 
-    def obtener_numeros(self) -> list[Numero_especial]:
-        return self.session.exec(select(Numero_especial)).all()
+    def obtener_numeros(self) -> list[NumeroEspecial]:
+        return self.session.exec(select(NumeroEspecial)).all()
 
-    def obtener_numero_id(self, numero_id: int) -> Numero_especial:
-        return self.session.get(Numero_especial, numero_id)
+    def obtener_numero_id(self, numero_id: int) -> NumeroEspecial:
+        return self.session.get(NumeroEspecial, numero_id)
 
-    def obtener_numeros_numero_idRifa(self, id_rifa: int, numero: int):
+    def obtener_numero_especial_id_rifa(self, id_rifa: int, numero: int):
         return self.session.exec(
-            select(Numero_especial).where(
-                Numero_especial.id_rifa == id_rifa, Numero_especial.numero == numero
+            select(NumeroEspecial).where(
+                NumeroEspecial.id_rifa == id_rifa, NumeroEspecial.numero == numero
             )
         ).first()
 
     def obtener_numeros_rifa(self, rifa_activa: Rifa) -> list[int]:
-        print("Obtener numeros rifa : NumeroRepository")
         return self.session.exec(
-            select(Numero_especial.numero).where(
-                Numero_especial.id_rifa == rifa_activa.id
+            select(NumeroEspecial.numero).where(
+                NumeroEspecial.id_rifa == rifa_activa.id
             )
         ).all()
 
     def actualizar_numero(self, numero: int, id_rifa: int):
         numero_obtenido = self.session.exec(
-            select(Numero_especial).where(
-                Numero_especial.id_rifa == id_rifa, Numero_especial.numero == numero
+            select(NumeroEspecial).where(
+                NumeroEspecial.id_rifa == id_rifa, NumeroEspecial.numero == numero
             )
         ).first()
         numero_obtenido.disponible = False
