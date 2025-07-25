@@ -2,7 +2,6 @@ import os
 from typing import Annotated
 
 import httpx
-import requests
 from dotenv import load_dotenv
 from fastapi import Depends
 
@@ -13,6 +12,7 @@ from ..users.services import user_service_dependency
 from ..utils.generar_numeros import generador_numeros_dependency
 from . import models
 from .compraRepository import compra_repository_depedency
+from ..exceptions import CompraCreationError
 
 load_dotenv()
 
@@ -81,7 +81,7 @@ class CompraService:
         if response.status_code == 201:
             init_point = response.json()["init_point"]
             return models.CompraResponse(init_point=init_point)
-        raise Exception("Error al crear la compra")
+        raise CompraCreationError()
 
     async def check_payment_status(
         self,
@@ -92,7 +92,8 @@ class CompraService:
         headers = {"Authorization": f"Bearer {ACCESS_TOKEN}"}
 
         # Realizamos la peticion
-        response = await requests.get(url, headers=headers)
+        async with httpx.AsyncClient() as client:
+            response = await client.get(url, headers=headers)
 
         data = response.json()
         status = data.get("status")

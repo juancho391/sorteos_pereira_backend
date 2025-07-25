@@ -82,3 +82,8 @@ class BoletasCreationError(HTTPException):
 class RifaNotFoundError(HTTPException):
     def __init__(self):
         super().__init__(status_code=404, detail="No se encontro rifa activa")
+
+
+class CompraCreationError(HTTPException):
+    def __init__(self):
+        super().__init__(status_code=500, detail="Fallo al crear la compra")
