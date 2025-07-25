@@ -3,7 +3,7 @@ from sqlmodel import Field, Relationship, SQLModel
 from .Rifa import Rifa
 
 
-class Numero_especial(SQLModel, table=True):
+class NumeroEspecial(SQLModel, table=True):
     __tablename__ = "Numero_especial"
     id: int | None = Field(default=None, primary_key=True)
     numero: int
