@@ -92,7 +92,7 @@ class CompraService:
         headers = {"Authorization": f"Bearer {ACCESS_TOKEN}"}
 
         # Realizamos la peticion
-        response = requests.get(url, headers=headers)
+        response = await requests.get(url, headers=headers)
 
         data = response.json()
         status = data.get("status")
