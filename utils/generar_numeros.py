@@ -19,14 +19,14 @@ class GeneradorNumeros:
         self.service_numeros = service_numeros
         self.numeros_especiales_service = service_numeros_especiales
 
-    def generarNumeros(
+    def generar_numeros(
         self,
         lista_numeros: list[int],
         cantidad_numeros: int,
         lista_numeros_especiales: list[int],
         rifa_id: int,
         cantidad_comprada: int = 3,
-    ) -> int:
+    ) -> list[int]:
         numeros_disponibles = cantidad_numeros - len(lista_numeros)
         if numeros_disponibles < cantidad_comprada:
             raise ValueError("No hay suficientes numeros disponibles para la compra")
@@ -60,7 +60,7 @@ class GeneradorNumeros:
         lita_numeros_especiales = self.numeros_especiales_service.obtener_numeros_rifa(
             rifa_activa=rifa_activa
         )
-        numeros_generados = self.generarNumeros(
+        numeros_generados = self.generar_numeros(
             lista_numeros=lista_numeros,
             cantidad_numeros=9999,
             lista_numeros_especiales=lita_numeros_especiales,
