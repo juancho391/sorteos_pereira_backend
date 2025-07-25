@@ -6,7 +6,7 @@ from sqlmodel import SQLModel
 from ..entities.Boleta import Boleta
 
 
-class Numero_especial(SQLModel):
+class NumeroEspecial(SQLModel):
     id: int
     numero: int
     id_rifa: int
@@ -30,5 +30,5 @@ class RifaResponse(RifaCreate):
     fecha_inicio: date
     fecha_fin: Optional[date] = None
     precio: int
-    numeros_especiales: list[Numero_especial] = []
+    numeros_especiales: list[NumeroEspecial] = []
     boletas: list[Boleta] = []
