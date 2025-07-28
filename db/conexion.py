@@ -15,15 +15,17 @@ db_host = os.getenv("DATABASE_HOST")
 db_name = os.getenv("DATABASE_NAME")
 db_url = f"postgresql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}"
 
-engine = create_engine(db_url)
+
+def get_engine(db_url: str = db_url):
+    return create_engine(db_url)
 
 
 def create_tables_and_db():
-    SQLModel.metadata.create_all(engine)
+    SQLModel.metadata.create_all(get_engine())
 
 
 def get_session():
-    with Session(engine) as session:
+    with Session(get_engine()) as session:
         yield session
 
 
