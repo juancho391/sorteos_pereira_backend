@@ -17,6 +17,7 @@ jobs:
       - name: environment variables
         run: |
           echo "AMBIENTE=${{ secrets.AMBIENTE}}" >> $GITHUB_ENV
+          echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> $GITHUB_ENV
       - name: Run ruff linter
         run: ruff check .
       - name: Run tests
