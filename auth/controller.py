@@ -13,6 +13,8 @@ async def login(user: models.USerLogin, session: session_dependency):
     return service.login_usuario(usuario=user, session=session)
 
 
-@auth_router.post("/register", response_model=UserResponse)
+@auth_router.post(
+    "/register", status_code=status.HTTP_201_CREATED, response_model=UserResponse
+)
 async def register(user: UserAdminCreate, session: session_dependency):
     return service.registrar_usuario(usuario=user, session=session)
