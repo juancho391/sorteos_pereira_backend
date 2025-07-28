@@ -16,5 +16,5 @@ class Rifa(SQLModel, table=True):
     image_premio: str
     precio: int
 
-    numeros_especiales: list["Numero_especial"] = Relationship(back_populates="rifa")
+    numeros_especiales: list["NumeroEspecial"] = Relationship(back_populates="rifa")
     boletas: list["Boleta"] = Relationship(back_populates="rifa")
