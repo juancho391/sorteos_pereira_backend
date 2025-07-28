@@ -19,6 +19,6 @@ app.add_middleware(
 registrar_routers(app=app)
 
 
-@app.on_event("startup")
-def on_startup():
-    create_tables_and_db()
+# @app.on_event("startup")
+# def on_startup():
+#     create_tables_and_db()
