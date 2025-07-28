@@ -10,7 +10,7 @@ def test_register_admin(client):
             "nombre": "juan bedoya",
             "direccion": "torre 4 apto 1",
             "celular": "3001234567",
-            "password": "juan123",
+            "password": "juan12",
             "is_admin": True,
         },
     )
@@ -27,13 +27,13 @@ def test_login_success(client):
             "nombre": "juan bedoya",
             "direccion": "torre 4 apto 1",
             "celular": "3001234567",
-            "password": "juan123",
+            "password": "juan1234",
             "is_admin": True,
         },
     )
     # Intento de iniciar sesion
     response = client.post(
-        "/auth/token", json={"email": "juan@gmail.com", "password": "juan123"}
+        "/auth/token", json={"email": "juan@gmail.com", "password": "juan1234"}
     )
     assert response.status_code == status.HTTP_200_OK
 
