@@ -14,6 +14,9 @@ jobs:
           python-version: "3.11"
       - name: Install dependencies
         run: pip install -r requirements.txt
+      - name: environment variables
+        run: |
+          echo "AMBIENTE=${{ secrets.AMBIENTE}}" >> $GITHUB_ENV
       - name: Run ruff linter
         run: ruff check .
       - name: Run tests

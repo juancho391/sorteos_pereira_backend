@@ -14,6 +14,13 @@ db_port = os.getenv("DATABASE_PORT")
 db_host = os.getenv("DATABASE_HOST")
 db_name = os.getenv("DATABASE_NAME")
 db_url = f"postgresql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}"
+ambiente = os.getenv("AMBIENTE")
+
+sqlite_name = "db_test.sqlite3"
+sqlite_url = f"sqlite:///{sqlite_name}"
+
+if ambiente == "test":
+    db_url = sqlite_url
 
 
 def get_engine(db_url: str = db_url):
