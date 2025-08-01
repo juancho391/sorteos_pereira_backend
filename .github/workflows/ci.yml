@@ -1,4 +1,5 @@
 name: CI
+run-name: CI for ${{ github.event_name }} on ${{ github.ref }}
 on:
   push:
     branches: ["main", "develop", "feature-**"]
@@ -14,7 +15,15 @@ jobs:
           python-version: "3.11"
       - name: Install dependencies
         run: pip install -r requirements.txt
+      - name: environment variables
+        run: |
+          echo "AMBIENTE=${{ secrets.AMBIENTE}}" >> $GITHUB_ENV
+          echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> $GITHUB_ENV
+          echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> $GITHUB_ENV
+          echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
+          echo "AWS_S3_REGION_NAME=${{ secrets.AWS_S3_REGION_NAME }}" >> $GITHUB_ENV
+          echo "AWS_STORAGE_BUCKET_NAME=${{ secrets.AWS_STORAGE_BUCKET_NAME }}" >> $GITHUB_ENV
       - name: Run ruff linter
         run: ruff check .
       - name: Run tests
-        run: pytest tests/
+        run: pytest tests/ -v

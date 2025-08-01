@@ -7,13 +7,19 @@ from sqlmodel import Session, SQLModel, create_engine
 
 load_dotenv()
 
+ambiente = os.getenv("AMBIENTE")
 
-db_user = os.getenv("DATABASE_USER")
-db_password = os.getenv("DATABASE_PASSWORD")
-db_port = os.getenv("DATABASE_PORT")
-db_host = os.getenv("DATABASE_HOST")
-db_name = os.getenv("DATABASE_NAME")
-db_url = f"postgresql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}"
+if ambiente == "test":
+    sqlite_name = "db_test.sqlite3"
+    sqlite_url = f"sqlite:///{sqlite_name}"
+    db_url = sqlite_url
+else:
+    db_user = os.getenv("DATABASE_USER")
+    db_password = os.getenv("DATABASE_PASSWORD")
+    db_port = os.getenv("DATABASE_PORT")
+    db_host = os.getenv("DATABASE_HOST")
+    db_name = os.getenv("DATABASE_NAME")
+    db_url = f"postgresql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}"
 
 
 def get_engine(db_url: str = db_url):
